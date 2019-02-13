@@ -4,7 +4,8 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 WORKDIR /code
 
-ENV RUBY_VERSION 2.6.1
+ENV RUBY_VERSION_23 2.3.3
+ENV RUBY_VERSION_26 2.6.1
 ENV NODE_VERSION 10.15.1
 
 ENV NVM_DIR /usr/local/nvm
@@ -43,12 +44,16 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
     curl -L https://get.rvm.io | /bin/bash -s stable && \
     echo 'source /etc/profile.d/rvm.sh' >> /etc/profile && \
     /bin/bash -l -c "rvm requirements;" && \
-    rvm install $RUBY_VERSION && \
-    /bin/bash -l -c "rvm use --default $RUBY_VERSION && \
+    rvm install $RUBY_VERSION_23 && \
+    rvm install $RUBY_VERSION_26 && \
+    /bin/bash -l -c "rvm use --default $RUBY_VERSION_26 && \
     gem install bundler" && \
     rvm cleanup all
 
-ENV PATH /usr/local/rvm/rubies/ruby-$RUBY_VERSION/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION/bin:$PATH
+ENV PATH /usr/local/rvm/rubies/ruby-$RUBY_VERSION_26/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_26/bin:$PATH
+ENV PATH /usr/local/rvm/rubies/ruby-$RUBY_VERSION_23/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_23/bin:$PATH
+
+RUN npm install -g netlify-cli
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
