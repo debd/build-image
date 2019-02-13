@@ -53,6 +53,8 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
 ENV PATH /usr/local/rvm/rubies/ruby-$RUBY_VERSION_26/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_26/bin:$PATH
 ENV PATH /usr/local/rvm/rubies/ruby-$RUBY_VERSION_23/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_23/bin:$PATH
 
+RUN npm install -g grunt-cli
+RUN npm install -g bower
 RUN npm install -g netlify-cli
 
 # Clean up APT when done.
