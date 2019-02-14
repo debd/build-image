@@ -1,6 +1,7 @@
 build-essential
 curl
 git-core
+language-pack-en-base
 libbz2-dev
 libreadline-dev
 libsqlite3-dev
