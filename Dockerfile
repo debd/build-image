@@ -9,9 +9,9 @@ FROM ubuntu:18.04
 ENV PHP_VERSION 7.2
 ENV NODE_VERSION 10.15.1
 ENV YARN_VERSION 1.13.0
-ENV RUBY_VERSION_23 2.3.3
+ENV RUBY_VERSION_23 2.3.8
 ENV RUBY_VERSION_26 2.6.1
-ENV RUBY_VERSION_DEFAULT $RUBY_VERSION_26
+ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_26}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -84,14 +84,23 @@ RUN apt-get update && \
       nasm \
       openjdk-8-jdk \
       optipng \
-      php$PHP_VERSION \
-      php$PHP_VERSION-xml \
-      php$PHP_VERSION-mbstring \
-      php$PHP_VERSION-gd \
-      php$PHP_VERSION-sqlite3 \
-      php$PHP_VERSION-curl \
-      php$PHP_VERSION-zip \
+      php${PHP_VERSION} \
+      php${PHP_VERSION}-xml \
+      php${PHP_VERSION}-mbstring \
+      php${PHP_VERSION}-gd \
+      php${PHP_VERSION}-sqlite3 \
+      php${PHP_VERSION}-curl \
+      php${PHP_VERSION}-zip \
       pngcrush \
+      python-setuptools \
+      python \
+      python-dev \
+      python-numpy \
+      python-pip \
+      python3 \
+      python3-dev \
+      python3-numpy \
+      python3-pip \
       rsync \
       sqlite3 \
       ssh \
@@ -99,6 +108,7 @@ RUN apt-get update && \
       swig \
       tree \
       unzip \
+      virtualenv \
       wget \
       xvfb \
       zip \
@@ -107,6 +117,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoremove -y && \
     unset DEBIAN_FRONTEND
+
+RUN locale-gen en_US.UTF-8
 
 ################################################################################
 #
@@ -118,7 +130,18 @@ RUN adduser --system --disabled-password --gecos '' --quiet runner --home /opt/r
 RUN adduser runner sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+USER runner
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python2.7/site-packages:/opt/runnerhome/.local/lib/python3.6/site-packages:$PATH"
+
+################################################################################
+#
+# AWS' ElasticBeanstalk CLI
+#
+################################################################################
+
+USER runner
+RUN pip install awsebcli --upgrade --user
 
 ################################################################################
 #
@@ -132,11 +155,11 @@ RUN curl -o- -L https://yarnpkg.com/install.sh > /usr/local/bin/yarn-installer.s
 USER runner
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 RUN /bin/bash -c "source /opt/runnerhome/.nvm/nvm.sh && \
-                  nvm install $NODE_VERSION && nvm use $NODE_VERSION && npm install -g bower grunt-cli netlify-cli && \
-                  bash /usr/local/bin/yarn-installer.sh --version $YARN_VERSION && \
+                  nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION} && npm install -g bower grunt-cli netlify-cli && \
+                  bash /usr/local/bin/yarn-installer.sh --version ${YARN_VERSION} && \
                   nvm alias default node && nvm cache clear"
 
-ENV PATH "/opt/runnerhome/.nvm/versions/node/v$NODE_VERSION/bin:$PATH"
+ENV PATH "/opt/runnerhome/.nvm/versions/node/v${NODE_VERSION}/bin:$PATH"
 ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_modules/.bin:$PATH"
 
 ################################################################################
@@ -147,9 +170,9 @@ ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_mod
 
 USER root
 
-RUN update-alternatives --set php /usr/bin/php$PHP_VERSION && \
-    update-alternatives --set phar /usr/bin/phar$PHP_VERSION && \
-    update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
+RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} && \
+    update-alternatives --set phar /usr/bin/phar${PHP_VERSION} && \
+    update-alternatives --set phar.phar /usr/bin/phar.phar${PHP_VERSION}
 
 RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer -O - | php -- --quiet && \
     mv composer.phar /usr/local/bin/composer
@@ -157,9 +180,9 @@ RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa
 USER runner
 
 RUN mkdir -p /opt/runnerhome/.php
-RUN ln -s /usr/bin/php$PHP_VERSION /opt/runnerhome/.php/php
-RUN ln -s /usr/bin/phar$PHP_VERSION /opt/runnerhome/.php/phar
-RUN ln -s /usr/bin/phar.phar$PHP_VERSION /opt/runnerhome/.php/phar.phar
+RUN ln -s /usr/bin/php${PHP_VERSION} /opt/runnerhome/.php/php
+RUN ln -s /usr/bin/phar${PHP_VERSION} /opt/runnerhome/.php/phar
+RUN ln -s /usr/bin/phar.phar${PHP_VERSION} /opt/runnerhome/.php/phar.phar
 
 ENV PATH "/opt/runnerhome/.php:$PATH"
 
@@ -174,15 +197,15 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
     command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - && \
     curl -sL https://get.rvm.io | bash -s stable --with-gems="bundler" --autolibs=4
 
-ENV PATH "/opt/runnerhome/.rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
-                  rvm install $RUBY_VERSION_23 && rvm use $RUBY_VERSION_23 && gem install bundler && \
-                  rvm install $RUBY_VERSION_26 && rvm use $RUBY_VERSION_26 && gem install bundler && \
-                  rvm use $RUBY_VERSION_DEFAULT --default && rvm cleanup all"
+                  rvm install ${RUBY_VERSION_23} && rvm use ${RUBY_VERSION_23} && gem install bundler && \
+                  rvm install ${RUBY_VERSION_26} && rvm use ${RUBY_VERSION_26} && gem install bundler && \
+                  rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-$RUBY_VERSION_26/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_26/bin:$PATH"
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-$RUBY_VERSION_23/bin:/usr/local/rvm/gems/ruby-$RUBY_VERSION_23/bin:$PATH"
+ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_26}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_26}/bin:$PATH"
+ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_23}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_23}/bin:$PATH"
 
 ################################################################################
 #

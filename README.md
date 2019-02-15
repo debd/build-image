@@ -19,9 +19,12 @@ To push, run:
   - 7.2
 - Ruby
   - 2.6.1 (default)
-  - Ruby 2.3.3
+  - Ruby 2.3.8
 - Node
   - 10.15.1
+- Python
+  - 2.7 (default)
+  - 3.6
 
 ### Tools
 
@@ -34,8 +37,11 @@ To push, run:
   - NPM (version corresponding with Node version)
   - `bower`
   - `grunt-cli`
-  - `netlify-cli`
+- Python
+  - pip (version corresponding with Python version)
 - General
+  - AWS ElasticBeanstalk CLI
+  - Netlify CLI
   - ImageMagick
   - OptiPNG
   - Jpegoptim
