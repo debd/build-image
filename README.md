@@ -40,8 +40,8 @@ Just a note for me (because I always forget this): to push, run ...
 - Node
   - 10.15.1
 - Python
-  - 2.7 (default)
-  - 3.6
+  - 2.7 (via `python` && `pip`)
+  - 3.6 (via `python3` && `pip3`)
 
 ### Tools
 
