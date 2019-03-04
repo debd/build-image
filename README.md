@@ -48,7 +48,8 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - Composer
 - Ruby
-  - Bundler 2
+  - RVM (`- source $HOME/.rvm/scripts/rvm` must be included in your CI config)
+  - Bundler 1 (2 also available if RVM is sourced)
 - Node
   - Yarn 1.13.0
   - NPM (version corresponding with Node version)
