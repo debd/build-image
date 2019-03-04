@@ -48,7 +48,7 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - Composer
 - Ruby
-  - Bundler
+  - Bundler 2
 - Node
   - Yarn 1.13.0
   - NPM (version corresponding with Node version)
