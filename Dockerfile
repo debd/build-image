@@ -200,8 +200,8 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
 ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
-                  rvm install ${RUBY_VERSION_23} && rvm use ${RUBY_VERSION_23} && gem install bundler && \
-                  rvm install ${RUBY_VERSION_26} && rvm use ${RUBY_VERSION_26} && gem install bundler && \
+                  rvm install ${RUBY_VERSION_23} && rvm use ${RUBY_VERSION_23} && gem update --system && gem install bundler --force && \
+                  rvm install ${RUBY_VERSION_26} && rvm use ${RUBY_VERSION_26} && gem update --system && gem install bundler --force && \
                   rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
 ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_26}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_26}/bin:$PATH"
