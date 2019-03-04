@@ -36,7 +36,7 @@ Just a note for me (because I always forget this): to push, run ...
   - 7.2
 - Ruby
   - 2.6.1 (default)
-  - Ruby 2.3.8
+  - 2.3.8
 - Node
   - 10.15.1
 - Python
