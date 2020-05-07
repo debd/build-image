@@ -10,13 +10,13 @@ ENV PHP_VERSION 7.2
 ENV NODE_VERSION 10.15.1
 ENV YARN_VERSION 1.17.3
 ENV RUBY_VERSION_23 2.3.8
-ENV RUBY_VERSION_26 2.6.1
+ENV RUBY_VERSION_26 2.6.6
 ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_26}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends software-properties-common language-pack-en-base apt-transport-https dirmngr gpg-agent sudo && \
+    apt-get install -y --no-install-recommends software-properties-common wget language-pack-en-base apt-transport-https dirmngr gpg-agent sudo && \
     add-apt-repository -y ppa:git-core/ppa && \
     LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && \
     apt-get -y update && \
@@ -133,6 +133,15 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER runner
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python2.7/site-packages:/opt/runnerhome/.local/lib/python3.6/site-packages:$PATH"
+
+################################################################################
+#
+# Heroku CLI
+#
+################################################################################
+
+USER runner
+RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
 ################################################################################
 #

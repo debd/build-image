@@ -35,7 +35,7 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - 7.2
 - Ruby
-  - 2.6.1 (default)
+  - 2.6.6 (default)
   - 2.3.8
 - Node
   - 10.15.1
@@ -48,7 +48,7 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - Composer
 - Ruby
-  - RVM (`- source $HOME/.rvm/scripts/rvm` must be included in your CI config)
+  - RVM (`source $HOME/.rvm/scripts/rvm` must be included in your CI config)
   - Bundler 1 (2 also available if RVM is sourced)
 - Node
   - Yarn 1.17.3
@@ -60,6 +60,7 @@ Just a note for me (because I always forget this): to push, run ...
 - General
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
+  - Heroku CLI
   - ImageMagick
   - OptiPNG
   - Jpegoptim
