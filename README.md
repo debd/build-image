@@ -25,7 +25,6 @@ Additionally, you have to set the following environment vars:
 
 Just a note for me (because I always forget this): to push, run ...
 
-- `docker build -t debd/build-image .`
 - `docker tag debd/build-image debd/build-image:x.x.x`
 - `docker push debd/build-image:x.x.x`
 
