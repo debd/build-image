@@ -35,7 +35,7 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - 7.2
 - Ruby
-  - 2.6.1 (default)
+  - 2.6.6 (default)
   - 2.3.8
 - Node
   - 10.15.1
@@ -60,6 +60,7 @@ Just a note for me (because I always forget this): to push, run ...
 - General
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
+  - Heroku CLI
   - ImageMagick
   - OptiPNG
   - Jpegoptim
