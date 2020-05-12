@@ -92,6 +92,8 @@ RUN apt-get update && \
       php${PHP_VERSION}-curl \
       php${PHP_VERSION}-zip \
       pngcrush \
+      postgresql \
+      postgresql-contrib \
       python-setuptools \
       python \
       python-dev \
