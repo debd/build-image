@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FROM ubuntu:18.04
+FROM jrei/systemd-ubuntu:18.04
 
 ENV PHP_VERSION 7.2
 ENV NODE_VERSION 10.15.1
@@ -115,7 +115,6 @@ RUN apt-get update && \
       ssh \
       strace \
       swig \
-      systemd \
       tree \
       unzip \
       virtualenv \
