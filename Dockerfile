@@ -66,6 +66,7 @@ RUN apt-get update && \
       libmcrypt-dev \
       libncurses5-dev \
       libnss3 \
+      libpq-dev \
       libreadline6-dev \
       libsm6 \
       libsqlite3-dev \
