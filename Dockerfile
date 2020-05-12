@@ -115,6 +115,7 @@ RUN apt-get update && \
       ssh \
       strace \
       swig \
+      systemd \
       tree \
       unzip \
       virtualenv \
