@@ -12,8 +12,14 @@ ENV YARN_VERSION 1.17.3
 ENV RUBY_VERSION_23 2.3.8
 ENV RUBY_VERSION_26 2.6.6
 ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_26}
+ENV CHROME_VERSION 80.0.3987.116
+ARG FIREFOX_VERSION=74.0
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+# "fake" dbus address to prevent errors
+# https://github.com/SeleniumHQ/docker-selenium/issues/87
+ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common wget language-pack-en-base apt-transport-https dirmngr gpg-agent sudo && \
@@ -218,6 +224,33 @@ RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
 
 ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_26}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_26}/bin:$PATH"
 ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_23}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_23}/bin:$PATH"
+
+################################################################################
+#
+# Chrome & Firefox
+#
+################################################################################
+
+USER root
+RUN apt-get update
+RUN apt-get install -y fonts-liberation libappindicator3-1 xdg-utils
+
+# install Chrome browser
+RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb" && \
+  dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
+  apt-get install -f -y && \
+  rm -f /usr/src/google-chrome-stable_current_amd64.deb
+RUN google-chrome --version
+
+# add codecs needed for video playback in firefox
+# https://github.com/cypress-io/cypress-docker-images/issues/150
+RUN apt-get install mplayer -y
+
+# install Firefox browser
+RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 \
+  && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
+  && rm /tmp/firefox.tar.bz2 \
+  && ln -fs /opt/firefox/firefox /usr/bin/firefox
 
 ################################################################################
 #

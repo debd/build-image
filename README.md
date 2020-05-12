@@ -45,6 +45,9 @@ Just a note for me (because I always forget this): to push, run ...
 
 ### Tools
 
+- Browsers
+  - Chrome 80
+  - Firefox 74
 - PHP
   - Composer
 - Ruby
