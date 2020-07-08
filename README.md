@@ -35,6 +35,7 @@ Just a note for me (because I always forget this): to push, run ...
 - PHP
   - 7.2
 - Ruby
+  - 2.7.1
   - 2.6.6 (default)
   - 2.3.8
 - Node
