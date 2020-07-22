@@ -28,6 +28,8 @@ Just a note for me (because I always forget this): to push, run ...
 - `docker tag debd/build-image debd/build-image:x.x.x`
 - `docker push debd/build-image:x.x.x`
 
+To SSH into the container, run `docker run -it debd/build-image bash`
+
 ## Included software
 
 ### Languages
