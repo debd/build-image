@@ -7,8 +7,8 @@
 FROM jrei/systemd-ubuntu:18.04
 
 ENV PHP_VERSION 7.2
-ENV NODE_VERSION 10.15.1
-ENV YARN_VERSION 1.17.3
+ENV NODE_VERSION 14.12.0
+ENV YARN_VERSION 1.22.5
 ENV RUBY_VERSION_23 2.3.8
 ENV RUBY_VERSION_26 2.6.6
 ENV RUBY_VERSION_27 2.7.1
@@ -111,6 +111,7 @@ RUN apt-get update && \
       python3-dev \
       python3-numpy \
       python3-pip \
+      python3-setuptools \
       rsync \
       sqlite3 \
       ssh \
@@ -160,7 +161,7 @@ RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 ################################################################################
 
 USER runner
-RUN pip install awsebcli --upgrade --user
+RUN pip install "pyrsistent==0.16.1" "awsebcli==3.19.0" --user
 
 ################################################################################
 #

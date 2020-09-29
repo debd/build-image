@@ -41,7 +41,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
   - 2.6.6 (default)
   - 2.3.8
 - Node
-  - 10.15.1
+  - 14.12.0
 - Python
   - 2.7 (via `python` && `pip`)
   - 3.6 (via `python3` && `pip3`)
@@ -57,7 +57,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
   - RVM (`source $HOME/.rvm/scripts/rvm` must be included in your CI config)
   - Bundler 1 (2 also available if RVM is sourced)
 - Node
-  - Yarn 1.17.3
+  - Yarn 1.22.5
   - NPM (version corresponding with Node version)
   - `bower`
   - `grunt-cli`
