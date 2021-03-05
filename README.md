@@ -72,4 +72,5 @@ To SSH into the container, run `docker run -it debd/build-image bash`
   - ImageMagick
   - OptiPNG
   - Jpegoptim
+  - mkcert
   - ... anything inside `Dockerfile` :smile:

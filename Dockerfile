@@ -276,6 +276,20 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.moz
 
 ################################################################################
 #
+# mkcert
+#
+################################################################################
+
+USER root
+RUN \
+  apt-get update && apt-get install wget libnss3-tools -y \
+  && wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 \
+  && chmod +x  mkcert \
+  && mv mkcert /usr/local/bin \
+  && ./usr/local/bin/mkcert -install
+
+################################################################################
+#
 # Cleanup
 #
 ################################################################################
