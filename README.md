@@ -67,7 +67,10 @@ To SSH into the container, run `docker run -it debd/build-image bash`
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
   - Heroku CLI
+  - Vercel CLI
+  - Serverless CLI
   - ImageMagick
   - OptiPNG
   - Jpegoptim
+  - mkcert
   - ... anything inside `Dockerfile` :smile:

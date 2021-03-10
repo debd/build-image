@@ -184,6 +184,24 @@ ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_mod
 
 ################################################################################
 #
+# Vercel CLI
+#
+################################################################################
+
+USER root
+RUN yarn global add vercel
+
+################################################################################
+#
+# Serverless CLI
+#
+################################################################################
+
+USER root
+RUN yarn global add serverless
+
+################################################################################
+#
 # PHP & Composer
 #
 ################################################################################
@@ -255,6 +273,20 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.moz
   && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
   && rm /tmp/firefox.tar.bz2 \
   && ln -fs /opt/firefox/firefox /usr/bin/firefox
+
+################################################################################
+#
+# mkcert
+#
+################################################################################
+
+USER root
+RUN \
+  apt-get update && apt-get install wget libnss3-tools -y \
+  && wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 \
+  && chmod +x  mkcert \
+  && mv mkcert /usr/local/bin \
+  && ./usr/local/bin/mkcert -install
 
 ################################################################################
 #
