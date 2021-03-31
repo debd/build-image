@@ -304,5 +304,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ################################################################################
 
 USER runner
+WORKDIR /opt/runnerhome
 
-CMD ["su", "-", "runner", "-c", "/bin/bash"]
+CMD ["/bin/bash"]
