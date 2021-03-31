@@ -50,7 +50,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
   - Chrome 80
   - Firefox 74
 - PHP
-  - Composer 1.10.20
+  - Composer 2.0.11
 - Ruby
   - RVM (`source $HOME/.rvm/scripts/rvm` must be included in your CI config)
   - Bundler 1 (2 also available if RVM is sourced)
