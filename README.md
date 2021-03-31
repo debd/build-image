@@ -37,9 +37,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - PHP
   - 7.2
 - Ruby
-  - 2.7.1
-  - 2.6.6 (default)
-  - 2.3.8
+  - 2.7.2
 - Node
   - 14.12.0
 - Python

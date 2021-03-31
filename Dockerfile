@@ -9,10 +9,8 @@ FROM jrei/systemd-ubuntu:18.04
 ENV PHP_VERSION 7.2
 ENV NODE_VERSION 14.12.0
 ENV YARN_VERSION 1.22.5
-ENV RUBY_VERSION_23 2.3.8
-ENV RUBY_VERSION_26 2.6.6
-ENV RUBY_VERSION_27 2.7.1
-ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_26}
+ENV RUBY_VERSION_27 2.7.2
+ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_27}
 ENV CHROME_VERSION 80.0.3987.116
 ARG FIREFOX_VERSION=74.0
 
@@ -238,13 +236,9 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
 ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
-                  rvm install ${RUBY_VERSION_23} && rvm use ${RUBY_VERSION_23} && gem update --system && gem install bundler --force && \
-                  rvm install ${RUBY_VERSION_26} && rvm use ${RUBY_VERSION_26} && gem update --system && gem install bundler --force && \
                   rvm install ${RUBY_VERSION_27} && rvm use ${RUBY_VERSION_27} && gem update --system && gem install bundler --force && \
                   rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_23}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_23}/bin:$PATH"
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_26}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_26}/bin:$PATH"
 ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_27}/bin:$PATH"
 
 ################################################################################
