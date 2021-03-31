@@ -131,25 +131,10 @@ RUN locale-gen en_US.UTF-8
 
 ################################################################################
 #
-# Add user for CI runner
-#
-################################################################################
-
-RUN adduser --system --disabled-password --gecos '' --quiet runner --home /opt/runnerhome
-RUN adduser runner sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-USER runner
-ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
-ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python2.7/site-packages:/opt/runnerhome/.local/lib/python3.6/site-packages:$PATH"
-
-################################################################################
-#
 # Heroku CLI
 #
 ################################################################################
 
-USER runner
 RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
 ################################################################################
@@ -158,8 +143,7 @@ RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 #
 ################################################################################
 
-USER runner
-RUN pip install "pyrsistent==0.16.1" "awsebcli==3.19.0" --user
+RUN pip install "pyrsistent==0.16.1" "awsebcli==3.19.0"
 
 ################################################################################
 #
@@ -167,18 +151,12 @@ RUN pip install "pyrsistent==0.16.1" "awsebcli==3.19.0" --user
 #
 ################################################################################
 
-USER root
-RUN curl -o- -L https://yarnpkg.com/install.sh > /usr/local/bin/yarn-installer.sh
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+RUN apt-get install -y nodejs
 
-USER runner
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-RUN /bin/bash -c "source /opt/runnerhome/.nvm/nvm.sh && \
-                  nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION} && npm install -g bower grunt-cli netlify-cli && \
-                  bash /usr/local/bin/yarn-installer.sh --version ${YARN_VERSION} && \
-                  nvm alias default node && nvm cache clear"
-
-ENV PATH "/opt/runnerhome/.nvm/versions/node/v${NODE_VERSION}/bin:$PATH"
-ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_modules/.bin:$PATH"
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN apt update && apt install yarn
 
 ################################################################################
 #
@@ -186,7 +164,6 @@ ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_mod
 #
 ################################################################################
 
-USER root
 RUN yarn global add vercel
 
 ################################################################################
@@ -195,7 +172,6 @@ RUN yarn global add vercel
 #
 ################################################################################
 
-USER root
 RUN yarn global add serverless
 
 ################################################################################
@@ -204,8 +180,6 @@ RUN yarn global add serverless
 #
 ################################################################################
 
-USER root
-
 RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} && \
     update-alternatives --set phar /usr/bin/phar${PHP_VERSION} && \
     update-alternatives --set phar.phar /usr/bin/phar.phar${PHP_VERSION}
@@ -213,33 +187,26 @@ RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} && \
 RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - | php -- --quiet --version=1.10.20 && \
     mv composer.phar /usr/local/bin/composer
 
-USER runner
-
-RUN mkdir -p /opt/runnerhome/.php
-RUN ln -s /usr/bin/php${PHP_VERSION} /opt/runnerhome/.php/php
-RUN ln -s /usr/bin/phar${PHP_VERSION} /opt/runnerhome/.php/phar
-RUN ln -s /usr/bin/phar.phar${PHP_VERSION} /opt/runnerhome/.php/phar.phar
-
-ENV PATH "/opt/runnerhome/.php:$PATH"
-
 ################################################################################
 #
 # RVM, Ruby & bundler
 #
 ################################################################################
 
-USER runner
+RUN echo 'export rvm_prefix="$HOME"' > /root/.rvmrc
+RUN echo 'export rvm_path="$HOME/.rvm"' >> /root/.rvmrc
+
 RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
     command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - && \
     curl -sL https://get.rvm.io | bash -s stable --with-gems="bundler" --autolibs=4
 
-ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
+ENV PATH "$HOME/.rvm/bin:$PATH"
 
-RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
+RUN /bin/bash -c "source $HOME/.rvm/scripts/rvm && \
                   rvm install ${RUBY_VERSION_27} && rvm use ${RUBY_VERSION_27} && gem update --system && gem install bundler --force && \
                   rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_27}/bin:$PATH"
+ENV PATH "$HOME/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_27}/bin:$PATH"
 
 ################################################################################
 #
@@ -247,7 +214,6 @@ ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm
 #
 ################################################################################
 
-USER root
 RUN apt-get update
 RUN apt-get install -y fonts-liberation libappindicator3-1 xdg-utils
 
@@ -274,7 +240,6 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.moz
 #
 ################################################################################
 
-USER root
 RUN \
   apt-get update && apt-get install wget libnss3-tools -y \
   && wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 \
@@ -288,16 +253,12 @@ RUN \
 #
 ################################################################################
 
-USER root
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ################################################################################
 #
-# Run image as user `runner`
+# Run bash
 #
 ################################################################################
-
-USER runner
-WORKDIR /opt/runnerhome
 
 CMD ["/bin/bash"]
