@@ -12,10 +12,10 @@ AWS' ElasticBeanstalk CLI can be used like this in a `gitlab-ci.yml` file:
 test:
   stage: test
   script:
-    - rm -rf /opt/runnerhome/.aws && mkdir -p /opt/runnerhome/.aws && touch /opt/runnerhome/.aws/config && chmod 600 /opt/runnerhome/.aws/config
-    - echo "[profile eb-cli]" >> /opt/runnerhome/.aws/config
-    - echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> /opt/runnerhome/.aws/config
-    - echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> /opt/runnerhome/.aws/config
+    - rm -rf $HOME/.aws && mkdir -p $HOME/.aws && touch $HOME/.aws/config && chmod 600 $HOME/.aws/config
+    - echo "[profile eb-cli]" >> $HOME/.aws/config
+    - echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> $HOME/.aws/config
+    - echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> $HOME/.aws/config
 ```
 
 Additionally, you have to set the following environment vars:
