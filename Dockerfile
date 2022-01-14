@@ -10,8 +10,8 @@ ENV PHP_VERSION 8.0
 ENV NODE_VERSION 14.12.0
 ENV YARN_VERSION 1.22.5
 ENV RUBY_VERSION_27 2.7.2
+ENV RUBY_VERSION_31 3.1.0
 ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_27}
-ENV CHROME_VERSION 80.0.3987.116
 ARG FIREFOX_VERSION=74.0
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -204,9 +204,11 @@ ENV PATH "$HOME/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source $HOME/.rvm/scripts/rvm && \
                   rvm install ${RUBY_VERSION_27} && rvm use ${RUBY_VERSION_27} && gem update --system && gem install bundler --force && \
+                  rvm install ${RUBY_VERSION_31} && rvm use ${RUBY_VERSION_31} && gem update --system && gem install bundler --force && \
                   rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
 ENV PATH "$HOME/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_27}/bin:$PATH"
+ENV PATH "$HOME/.rvm/rubies/ruby-${RUBY_VERSION_31}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_31}/bin:$PATH"
 
 ################################################################################
 #
@@ -218,7 +220,7 @@ RUN apt-get update
 RUN apt-get install -y fonts-liberation libappindicator3-1 xdg-utils
 
 # install Chrome browser
-RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb" && \
+RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" && \
   dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
   apt-get install -f -y && \
   rm -f /usr/src/google-chrome-stable_current_amd64.deb
