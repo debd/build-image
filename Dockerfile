@@ -7,7 +7,7 @@
 FROM jrei/systemd-ubuntu:18.04
 
 ENV PHP_VERSION 8.0
-ENV NODE_VERSION 14.12.0
+ENV NODE_VERSION 14.19.1
 ENV YARN_VERSION 1.22.5
 ENV RUBY_VERSION_27 2.7.2
 ENV RUBY_VERSION_31 3.1.0
@@ -135,7 +135,7 @@ RUN locale-gen en_US.UTF-8
 #
 ################################################################################
 
-RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+RUN curl https://cli-assets.heroku.com/install.sh | sh
 
 ################################################################################
 #
