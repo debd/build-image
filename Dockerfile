@@ -184,7 +184,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} && \
     update-alternatives --set phar /usr/bin/phar${PHP_VERSION} && \
     update-alternatives --set phar.phar /usr/bin/phar.phar${PHP_VERSION}
 
-RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - | php -- --quiet --version=2.0.11 && \
+RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - | php -- --quiet --version=1.10.20 && \
     mv composer.phar /usr/local/bin/composer
 
 ################################################################################
