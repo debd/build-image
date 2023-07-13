@@ -4,16 +4,13 @@
 #
 ################################################################################
 
-FROM jrei/systemd-ubuntu:18.04
+FROM jrei/systemd-ubuntu:22.04
 
-ENV PHP_VERSION 7.2
-ENV NODE_VERSION 14.12.0
+ENV PHP_VERSION 8.2
+ENV NODE_VERSION 18.16.1
 ENV YARN_VERSION 1.22.5
-ENV RUBY_VERSION_23 2.3.8
-ENV RUBY_VERSION_26 2.6.6
-ENV RUBY_VERSION_27 2.7.1
-ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_26}
-ENV CHROME_VERSION 80.0.3987.116
+ENV RUBY_VERSION_32 3.2.2
+ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_32}
 ARG FIREFOX_VERSION=74.0
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -38,7 +35,7 @@ RUN apt-get update && \
       cmake \
       curl \
       elixir \
-      emacs25-nox \
+      emacs \
       expect \
       fontconfig \
       fontconfig-config \
@@ -90,7 +87,6 @@ RUN apt-get update && \
       make \
       mercurial \
       nasm \
-      openjdk-8-jdk \
       optipng \
       php${PHP_VERSION} \
       php${PHP_VERSION}-xml \
@@ -102,11 +98,6 @@ RUN apt-get update && \
       pngcrush \
       postgresql \
       postgresql-contrib \
-      python-setuptools \
-      python \
-      python-dev \
-      python-numpy \
-      python-pip \
       python3 \
       python3-dev \
       python3-numpy \
@@ -143,16 +134,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER runner
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
-ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python2.7/site-packages:/opt/runnerhome/.local/lib/python3.6/site-packages:$PATH"
-
-################################################################################
-#
-# Heroku CLI
-#
-################################################################################
-
-USER runner
-RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python3.7/site-packages:$PATH"
 
 ################################################################################
 #
@@ -161,7 +143,7 @@ RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 ################################################################################
 
 USER runner
-RUN pip install "pyrsistent==0.16.1" "awsebcli==3.19.0" --user
+RUN pip install awsebcli --user
 
 ################################################################################
 #
@@ -212,7 +194,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} && \
     update-alternatives --set phar /usr/bin/phar${PHP_VERSION} && \
     update-alternatives --set phar.phar /usr/bin/phar.phar${PHP_VERSION}
 
-RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer -O - | php -- --quiet && \
+RUN wget -nv https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - | php -- --quiet --version=2.5.8 && \
     mv composer.phar /usr/local/bin/composer
 
 USER runner
@@ -238,14 +220,10 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
 ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
-                  rvm install ${RUBY_VERSION_23} && rvm use ${RUBY_VERSION_23} && gem update --system && gem install bundler --force && \
-                  rvm install ${RUBY_VERSION_26} && rvm use ${RUBY_VERSION_26} && gem update --system && gem install bundler --force && \
-                  rvm install ${RUBY_VERSION_27} && rvm use ${RUBY_VERSION_27} && gem update --system && gem install bundler --force && \
+                  rvm install ${RUBY_VERSION_32} && rvm use ${RUBY_VERSION_32} && gem update --system && gem install bundler --force && \
                   rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_23}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_23}/bin:$PATH"
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_26}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_26}/bin:$PATH"
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_27}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_27}/bin:$PATH"
+ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_32}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_32}/bin:$PATH"
 
 ################################################################################
 #
@@ -258,7 +236,7 @@ RUN apt-get update
 RUN apt-get install -y fonts-liberation libappindicator3-1 xdg-utils
 
 # install Chrome browser
-RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb" && \
+RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" && \
   dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
   apt-get install -f -y && \
   rm -f /usr/src/google-chrome-stable_current_amd64.deb
@@ -304,5 +282,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ################################################################################
 
 USER runner
+WORKDIR /opt/runnerhome
 
-CMD ["su", "-", "runner", "-c", "/bin/bash"]
+CMD ["/bin/bash"]
