@@ -4,7 +4,7 @@ Based on [https://github.com/tzenderman/docker-pyenv-rvm-nvm](https://github.com
 
 We're using it to build our projects on our own GitLab CI Docker runners.
 
-Can be built (and used) locally with: `docker build --no-cache -t debd/build-image .`
+Can be built (and used) locally with: `docker build --no-cache --platform=linux/amd64 -t debd/build-image .`
 
 AWS' ElasticBeanstalk CLI can be used like this in a `gitlab-ci.yml` file:
 
@@ -35,22 +35,21 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 ### Languages
 
 - PHP
-  - 8.0
+  - 8.2
 - Ruby
-  - 2.7.2
+  - 3.2.2
 - Node
-  - 14.12.0
+  - 18.16.1
 - Python
-  - 2.7 (via `python` && `pip`)
-  - 3.6 (via `python3` && `pip3`)
+  - 3.7
 
 ### Tools
 
 - Browsers
-  - Chrome 80
+  - Chrome (latest stable)
   - Firefox 74
 - PHP
-  - Composer 1.10.20
+  - Composer 2.5.8
 - Ruby
   - RVM (`source $HOME/.rvm/scripts/rvm` must be included in your CI config)
   - Bundler 1 (2 also available if RVM is sourced)
@@ -64,7 +63,6 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - General
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
-  - Heroku CLI
   - Vercel CLI
   - Serverless CLI
   - ImageMagick
