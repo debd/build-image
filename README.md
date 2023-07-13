@@ -4,7 +4,7 @@ Based on [https://github.com/tzenderman/docker-pyenv-rvm-nvm](https://github.com
 
 We're using it to build our projects on our own GitLab CI Docker runners.
 
-Can be built (and used) locally with: `docker build --no-cache -t debd/build-image .`
+Can be built (and used) locally with: `docker build --no-cache --platform=linux/amd64 -t debd/build-image .`
 
 AWS' ElasticBeanstalk CLI can be used like this in a `gitlab-ci.yml` file:
 
@@ -12,10 +12,10 @@ AWS' ElasticBeanstalk CLI can be used like this in a `gitlab-ci.yml` file:
 test:
   stage: test
   script:
-    - rm -rf $HOME/.aws && mkdir -p $HOME/.aws && touch $HOME/.aws/config && chmod 600 $HOME/.aws/config
-    - echo "[profile eb-cli]" >> $HOME/.aws/config
-    - echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> $HOME/.aws/config
-    - echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> $HOME/.aws/config
+    - rm -rf /opt/runnerhome/.aws && mkdir -p /opt/runnerhome/.aws && touch /opt/runnerhome/.aws/config && chmod 600 /opt/runnerhome/.aws/config
+    - echo "[profile eb-cli]" >> /opt/runnerhome/.aws/config
+    - echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> /opt/runnerhome/.aws/config
+    - echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> /opt/runnerhome/.aws/config
 ```
 
 Additionally, you have to set the following environment vars:
@@ -35,23 +35,21 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 ### Languages
 
 - PHP
-  - 8.0
+  - 8.2
 - Ruby
-  - 2.7.2
-  - 3.1.0
+  - 3.2.2
 - Node
-  - 14.12.0
+  - 18.16.1
 - Python
-  - 2.7 (via `python` && `pip`)
-  - 3.6 (via `python3` && `pip3`)
+  - 3.7
 
 ### Tools
 
 - Browsers
-  - Chrome (latest)
+  - Chrome (latest stable)
   - Firefox 74
 - PHP
-  - Composer 1.10.20
+  - Composer 2.5.8
 - Ruby
   - RVM (`source $HOME/.rvm/scripts/rvm` must be included in your CI config)
   - Bundler 1 (2 also available if RVM is sourced)
@@ -65,7 +63,6 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - General
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
-  - Heroku CLI
   - Vercel CLI
   - Serverless CLI
   - ImageMagick
