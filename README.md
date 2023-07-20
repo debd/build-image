@@ -61,6 +61,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - Python
   - pip (version corresponding with Python version)
 - General
+  - AWS CLI
   - AWS ElasticBeanstalk CLI
   - Netlify CLI
   - Vercel CLI

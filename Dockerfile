@@ -138,12 +138,24 @@ ENV PATH "/opt/runnerhome/.local/bin:/opt/runnerhome/.local/lib/python3.7/site-p
 
 ################################################################################
 #
-# AWS' ElasticBeanstalk CLI
+# AWS ElasticBeanstalk CLI
 #
 ################################################################################
 
 USER runner
-RUN pip install awsebcli --user
+RUN pip install PyYAML==5.3.1 --user && \
+    pip install awsebcli --user
+
+################################################################################
+#
+# AWS CLI
+#
+################################################################################
+
+USER root
+RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+    unzip awscliv2.zip && \
+    ./aws/install
 
 ################################################################################
 #
