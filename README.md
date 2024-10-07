@@ -37,9 +37,9 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - PHP
   - 8.2
 - Ruby
-  - 3.2.2
+  - 3.3.5
 - Node
-  - 18.16.1
+  - 20.18.0
 - Python
   - 3.7
 
@@ -47,7 +47,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 
 - Browsers
   - Chrome (latest stable)
-  - Firefox 74
+  - Firefox 131
 - PHP
   - Composer 2.5.8
 - Ruby
@@ -63,6 +63,7 @@ To SSH into the container, run `docker run -it debd/build-image bash`
 - General
   - AWS CLI
   - AWS ElasticBeanstalk CLI
+  - DDEV
   - Netlify CLI
   - Vercel CLI
   - Serverless CLI

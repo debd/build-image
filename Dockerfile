@@ -7,11 +7,12 @@
 FROM jrei/systemd-ubuntu:22.04
 
 ENV PHP_VERSION 8.2
-ENV NODE_VERSION 18.16.1
+ENV NODE_VERSION 20.18.0
 ENV YARN_VERSION 1.22.5
-ENV RUBY_VERSION_32 3.2.2
-ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_32}
-ARG FIREFOX_VERSION=74.0
+ENV RUBY_VERSION_33 3.3.5
+ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_33}
+ENV FIREFOX_VERSION=131.0
+ENV DDEV_VERSION=1.23.4
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -25,96 +26,97 @@ RUN apt-get update && \
     LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && \
     apt-get -y update && \
     apt-get install -y --no-install-recommends \
-      advancecomp \
-      apache2-utils \
-      autoconf \
-      automake \
-      bison \
-      build-essential \
-      bzr \
-      cmake \
-      curl \
-      elixir \
-      emacs \
-      expect \
-      fontconfig \
-      fontconfig-config \
-      g++ \
-      gawk \
-      git \
-      gifsicle \
-      gobject-introspection \
-      graphicsmagick \
-      graphviz \
-      gtk-doc-tools \
-      imagemagick \
-      jpegoptim \
-      libasound2 \
-      libexif-dev \
-      libffi-dev \
-      libfontconfig1 \
-      libgconf-2-4 \
-      libgd-dev \
-      libgdbm-dev \
-      libgif-dev \
-      libglib2.0-dev \
-      libgmp3-dev \
-      libgraphicsmagick-q16-3 \
-      libgtk-3-0 \
-      libgtk2.0-0 \
-      libicu-dev \
-      libimage-exiftool-perl \
-      libjpeg-progs \
-      libjpeg-turbo8-dev \
-      libmagickwand-dev \
-      libmcrypt-dev \
-      libncurses5-dev \
-      libnss3 \
-      libpq-dev \
-      libreadline6-dev \
-      libsm6 \
-      libsqlite3-dev \
-      libssl-dev \
-      libtiff5-dev \
-      libtool \
-      libxml2-dev \
-      libxrender1 \
-      libxslt-dev \
-      libxss1 \
-      libxtst6 \
-      libyaml-dev \
-      llvm \
-      make \
-      mercurial \
-      nasm \
-      optipng \
-      php${PHP_VERSION} \
-      php${PHP_VERSION}-xml \
-      php${PHP_VERSION}-mbstring \
-      php${PHP_VERSION}-gd \
-      php${PHP_VERSION}-sqlite3 \
-      php${PHP_VERSION}-curl \
-      php${PHP_VERSION}-zip \
-      pngcrush \
-      postgresql \
-      postgresql-contrib \
-      python3 \
-      python3-dev \
-      python3-numpy \
-      python3-pip \
-      python3-setuptools \
-      rsync \
-      sqlite3 \
-      ssh \
-      strace \
-      swig \
-      tree \
-      unzip \
-      virtualenv \
-      wget \
-      xvfb \
-      zip \
-      && \
+    advancecomp \
+    apache2-utils \
+    autoconf \
+    automake \
+    bison \
+    build-essential \
+    bzr \
+    cmake \
+    curl \
+    elixir \
+    emacs \
+    expect \
+    fontconfig \
+    fontconfig-config \
+    g++ \
+    gawk \
+    git \
+    gifsicle \
+    gobject-introspection \
+    graphicsmagick \
+    graphviz \
+    gtk-doc-tools \
+    imagemagick \
+    jpegoptim \
+    jq \
+    libasound2 \
+    libexif-dev \
+    libffi-dev \
+    libfontconfig1 \
+    libgconf-2-4 \
+    libgd-dev \
+    libgdbm-dev \
+    libgif-dev \
+    libglib2.0-dev \
+    libgmp3-dev \
+    libgraphicsmagick-q16-3 \
+    libgtk-3-0 \
+    libgtk2.0-0 \
+    libicu-dev \
+    libimage-exiftool-perl \
+    libjpeg-progs \
+    libjpeg-turbo8-dev \
+    libmagickwand-dev \
+    libmcrypt-dev \
+    libncurses5-dev \
+    libnss3 \
+    libpq-dev \
+    libreadline6-dev \
+    libsm6 \
+    libsqlite3-dev \
+    libssl-dev \
+    libtiff5-dev \
+    libtool \
+    libxml2-dev \
+    libxrender1 \
+    libxslt-dev \
+    libxss1 \
+    libxtst6 \
+    libyaml-dev \
+    llvm \
+    make \
+    mercurial \
+    nasm \
+    optipng \
+    php${PHP_VERSION} \
+    php${PHP_VERSION}-xml \
+    php${PHP_VERSION}-mbstring \
+    php${PHP_VERSION}-gd \
+    php${PHP_VERSION}-sqlite3 \
+    php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-zip \
+    pngcrush \
+    postgresql \
+    postgresql-contrib \
+    python3 \
+    python3-dev \
+    python3-numpy \
+    python3-pip \
+    python3-setuptools \
+    rsync \
+    sqlite3 \
+    ssh \
+    strace \
+    swig \
+    tree \
+    unzip \
+    virtualenv \
+    wget \
+    xvfb \
+    zip \
+    && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoremove -y && \
@@ -169,9 +171,9 @@ RUN curl -o- -L https://yarnpkg.com/install.sh > /usr/local/bin/yarn-installer.s
 USER runner
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 RUN /bin/bash -c "source /opt/runnerhome/.nvm/nvm.sh && \
-                  nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION} && npm install -g bower grunt-cli netlify-cli && \
-                  bash /usr/local/bin/yarn-installer.sh --version ${YARN_VERSION} && \
-                  nvm alias default node && nvm cache clear"
+    nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION} && npm install -g bower grunt-cli netlify-cli && \
+    bash /usr/local/bin/yarn-installer.sh --version ${YARN_VERSION} && \
+    nvm alias default node && nvm cache clear"
 
 ENV PATH "/opt/runnerhome/.nvm/versions/node/v${NODE_VERSION}/bin:$PATH"
 ENV PATH "/opt/runnerhome/.yarn/bin:/opt/runnerhome/.config/yarn/global/node_modules/.bin:$PATH"
@@ -232,10 +234,10 @@ RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
 ENV PATH "/opt/runnerhome/.rvm/bin:$PATH"
 
 RUN /bin/bash -c "source ~/.rvm/scripts/rvm && \
-                  rvm install ${RUBY_VERSION_32} && rvm use ${RUBY_VERSION_32} && gem update --system && gem install bundler --force && \
-                  rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
+    rvm install ${RUBY_VERSION_33} && rvm use ${RUBY_VERSION_33} && gem update --system && gem install bundler --force && \
+    rvm use ${RUBY_VERSION_DEFAULT} --default && rvm cleanup all"
 
-ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_32}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_32}/bin:$PATH"
+ENV PATH "/opt/runnerhome/.rvm/rubies/ruby-${RUBY_VERSION_33}/bin:/usr/local/rvm/gems/ruby-${RUBY_VERSION_33}/bin:$PATH"
 
 ################################################################################
 #
@@ -249,9 +251,9 @@ RUN apt-get install -y fonts-liberation libappindicator3-1 xdg-utils
 
 # install Chrome browser
 RUN wget -O /usr/src/google-chrome-stable_current_amd64.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" && \
-  dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
-  apt-get install -f -y && \
-  rm -f /usr/src/google-chrome-stable_current_amd64.deb
+    dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
+    apt-get install -f -y && \
+    rm -f /usr/src/google-chrome-stable_current_amd64.deb
 RUN google-chrome --version
 
 # add codecs needed for video playback in firefox
@@ -260,9 +262,49 @@ RUN apt-get install mplayer -y
 
 # install Firefox browser
 RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 \
-  && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
-  && rm /tmp/firefox.tar.bz2 \
-  && ln -fs /opt/firefox/firefox /usr/bin/firefox
+    && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
+    && rm /tmp/firefox.tar.bz2 \
+    && ln -fs /opt/firefox/firefox /usr/bin/firefox
+
+################################################################################
+#
+# Docker
+#
+################################################################################
+
+USER root
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg; \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null; \
+    apt-get update -y; \
+    apt-get install -y docker-ce; \
+    rm -rf /var/cache/apt;
+RUN \
+    echo "ulimits: $(ulimit -Sn):$(ulimit -Hn)"; \
+    sed -i 's/ulimit -Hn/# ulimit -Hn/g' /etc/init.d/docker; \
+    service docker start; \
+    rm -rf /var/cache/apt;
+
+################################################################################
+#
+# DDEV
+#
+################################################################################
+
+USER root
+# Add DDEV’s GPG key to your keyring
+RUN sh -c 'echo ""'
+RUN apt-get update && sudo apt-get install -y curl
+RUN install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/ddev.gpg > /dev/null
+RUN chmod a+r /etc/apt/keyrings/ddev.gpg
+
+# Add DDEV releases to your package repository
+RUN sh -c 'echo ""'
+RUN echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list >/dev/null
+
+# Update package information and install DDEV
+RUN sh -c 'echo ""'
+RUN apt-get update && sudo apt-get install -y ddev
 
 ################################################################################
 #
@@ -272,11 +314,11 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.moz
 
 USER root
 RUN \
-  apt-get update && apt-get install wget libnss3-tools -y \
-  && wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 \
-  && chmod +x  mkcert \
-  && mv mkcert /usr/local/bin \
-  && ./usr/local/bin/mkcert -install
+    apt-get update && apt-get install wget libnss3-tools -y \
+    && wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 \
+    && chmod +x  mkcert \
+    && mv mkcert /usr/local/bin \
+    && ./usr/local/bin/mkcert -install
 
 ################################################################################
 #
@@ -296,4 +338,4 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 USER runner
 WORKDIR /opt/runnerhome
 
-CMD ["/bin/bash"]
+CMD ["service docker start && /bin/bash"]
