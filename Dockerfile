@@ -12,7 +12,7 @@ ENV YARN_VERSION 1.22.5
 ENV RUBY_VERSION_33 3.3.5
 ENV RUBY_VERSION_DEFAULT ${RUBY_VERSION_33}
 ENV FIREFOX_VERSION=131.0
-ENV DDEV_VERSION=1.23.4
+ENV DDEV_VERSION=1.23.5
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -284,6 +284,11 @@ RUN \
     service docker start; \
     rm -rf /var/cache/apt;
 
+RUN apt-get install acl -y
+
+USER runner
+RUN sudo usermod -aG docker runner
+
 ################################################################################
 #
 # DDEV
@@ -293,18 +298,18 @@ RUN \
 USER root
 # Add DDEV’s GPG key to your keyring
 RUN sh -c 'echo ""'
-RUN apt-get update && sudo apt-get install -y curl
+RUN apt-get update && apt-get install -y curl
 RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/ddev.gpg > /dev/null
+RUN curl -fsSL https://pkg.ddev.com/apt/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/ddev.gpg > /dev/null
 RUN chmod a+r /etc/apt/keyrings/ddev.gpg
 
 # Add DDEV releases to your package repository
 RUN sh -c 'echo ""'
-RUN echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list >/dev/null
+RUN echo "deb [signed-by=/etc/apt/keyrings/ddev.gpg] https://pkg.ddev.com/apt/ * *" | tee /etc/apt/sources.list.d/ddev.list >/dev/null
 
 # Update package information and install DDEV
 RUN sh -c 'echo ""'
-RUN apt-get update && sudo apt-get install -y ddev
+RUN apt-get update && apt-get install -y ddev
 
 ################################################################################
 #
